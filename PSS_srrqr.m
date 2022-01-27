@@ -1,7 +1,5 @@
 %%% Parameter Subset Selection Algorithm with srrqr (PSS_srrqr.m)
 
-%%% Requirements: srrqr.m
-
 %%% Determines unidentifiable parameters using parameter subset selection algorithm
 %%% with strong rank-revealing QR factorization 
 
@@ -14,7 +12,7 @@
     %%% Id: identifiable parameter indices
     %%% c: success criteria for rank revealing fact
 
-function [UnId, Id, c] = PSS_srrqrKP(dydq, eta, k)
+function [UnId, Id, c] = PSS_srrqr(dydq, eta, k)
 
 %%% initialize values
 UnId = [];
