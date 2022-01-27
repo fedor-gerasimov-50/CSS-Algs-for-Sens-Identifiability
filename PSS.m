@@ -30,6 +30,6 @@ switch algorithm
     case 3
         [unid, id, c] = PSS_B3(SensMat, tol, k);
     case 4
-        [unid, id, c] = PSS_srrqrKP(SensMat, tol, k);
+        [unid, id, c] = PSS_srrqr(SensMat, tol, k);
 end
 
