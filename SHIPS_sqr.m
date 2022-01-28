@@ -1,4 +1,4 @@
-%%% filename: SHIPS_sqr.m
+%%% filename: SHIPS.m
 
 %%% requires: SubsetSelect.m, PSS.m, PSS_B1.m, PSS_B4.m, PSS_B3.m,
 %%% PSS_srrqr.m, SuccessCheck.m
