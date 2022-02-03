@@ -15,9 +15,9 @@ Part = struct; %%% main structure holding relevant quantities for each realizati
 num_reals = 10000; %%% # realizations of Sorensen-Embree matrix
 num_algs = 4; 
 
-m = 90; %%% # rows
-n = 90; %%% # columns
-k = 30; %%% rank
+m = 200; %%% # rows
+n = 100; %%% # columns
+k = 20; %%% rank
 
 L = tril(-ones(k,k),-1) + eye(k);
 L(k+1:n,:) = -1;
