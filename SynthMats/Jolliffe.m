@@ -14,16 +14,16 @@ Part = struct;
 num_reals = 10000;
 num_algs = 4;
 
-p = 30; %%% number of blocks
+p = 20; %%% number of blocks
 
 rho_1 = .9; %%% lower bound for rho
 rho_2 = .99999; %%% upper bound
 
-blksize = 3; %%% size of each block; can be different sizes, just change K
+blksize = 5; %%% size of each block; can be different sizes, just change K
 K = repmat(blksize,1,p); %%% vector of length p storing each block's size
 
 n = blksize*p;
-m = n; %%% if rectangular; change
+m = 200; 
 k = p;
 
 for real = 1:num_reals
