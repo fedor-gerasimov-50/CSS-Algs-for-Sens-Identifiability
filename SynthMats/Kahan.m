@@ -75,11 +75,5 @@ crit2_abs_mean = mean(crit2_abs,2);
 crit2_rel_mean = mean(crit2_rel,2);
 crit3_cnd_mean = mean(crit3_cnd,2);
 
-%%% log10 of means
-crit1_abs_mlog = log10(crit1_abs_mean);
-crit1_rel_mlog = log10(crit1_rel_mean);
-crit2_abs_mlog = log10(crit2_abs_mean);
-crit2_rel_mlog = log10(crit2_rel_mean);
-crit3_cnd_mlog = log10(crit3_cnd_mean);
-
-clearvars -except Part crit1_abs crit1_rel crit2_abs crit2_rel crit3_cnd crit1_abs_mlog crit1_rel_mlog crit2_abs_mlog crit2_rel_mlog crit3_cnd_mlog
+cond_num = [Part.cond_num]';
+mean_cond = mean(cond_num);
