@@ -15,9 +15,9 @@ Part = struct; %%% main structure holding relevant quantities for each realizati
 num_reals = 10000; %%% # realizations of SHIPS matrix
 num_algs = 4;
 
-m = 90; %%% # rows
-n = 90; %%% # cols
-k = n/3; %%% num rank
+m = 200; %%% # rows
+n = 100; %%% # cols
+k = 20; %%% num rank
 
 V11 = -triu(ones(k,k),1) + eye(k);  %%% used to construct matrix of right singular vectors
 V11 = V11/(2*norm(V11));
@@ -78,14 +78,9 @@ crit2_abs_mean = mean(crit2_abs,2);
 crit2_rel_mean = mean(crit2_rel,2);
 crit3_cnd_mean = mean(crit3_cnd,2);
 
-%%% log10 of means
-crit1_abs_mlog = log10(crit1_abs_mean);
-crit1_rel_mlog = log10(crit1_rel_mean);
-crit2_abs_mlog = log10(crit2_abs_mean);
-crit2_rel_mlog = log10(crit2_rel_mean);
-crit3_cnd_mlog = log10(crit3_cnd_mean);
+cond_num = [Part.cond_num]';
+mean_cond = mean(cond_num);
 
-filename = sprintf('SHIPS_sqr_%d',num_reals);
+filename = sprintf('SHIPS_%d',num_reals);
 save(filename)
 
-clearvars -except Part crit1_abs crit1_rel crit2_abs crit2_rel crit3_cnd crit1_abs_mlog crit1_rel_mlog crit2_abs_mlog crit2_rel_mlog crit3_cnd_mlog
