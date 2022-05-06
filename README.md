@@ -1,11 +1,17 @@
 # CSS-Algs-for-Sens-Identifiability
+This repository contains MATLAB codes for column subset selection via QR decompositions, accompanying the paper
 
+K.J Pearce, I.C.F. Ipsen, M.A. Haider, A.K. Saibaba, and R.C. Smith. "Robust Parameter Identifiability Analysis via Column Subset Selection." submitted to SIAM Review, May 2022.
 
-Main Subset Selection Routine: SubsetSelect.m
-  Requires: n x p sensitivity matrix, tol (optional), k (optional), algorithm numbers
-  Each algorithm (B1, B4, B3, srrqr) corresponds to an input 1:4, respectively, to PSS.m
-  PSS.m can accept rank tolerance (tol, e.g. 1e-8) or numerical rank (k < p)--if both inputted, defaults to k; if none, defaults to tol = 1e-8 to find k
-  
-  Then calls column subset selection algorithms based on alg numbers
-  Within each call to a CSS algorithm (PSS_X.m), SuccessCheck.m computes the success criteria (2.4) and (2.5) as well as cond(S) and cond(S_1) after CSS
-  
+```
+@article{SHIPS2022,
+  title={Robust Parameter Identifiability Analysis via Column Subset Selection},
+  author={Pearce, Katherine J. and Ipsen, Ilse C.F. and Haider, Mansoor A. and Saibaba, Arvind K. and Smith, Ralph C.},
+  journal={SIAM Review},
+  year={2022}
+}
+```
+
+Thanks to NSF, DOE, and AFOSR for their support through grants 
+NSF DMS-1745654 and DOE DE-SC0022085 (ICFI); 
+NSF DMS-1845406 (AKS), NSF-DMS-1638521 (KJP, MAH), NSF-DMS-2053812 (MAH, RCS), AFOSR FA9550-18-1-0457 (RCS)
