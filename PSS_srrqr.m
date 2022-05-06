@@ -1,29 +1,28 @@
-%%% Parameter Subset Selection Algorithm with srrqr (PSS_srrqr.m)
+% Parameter Subset Selection Algorithm with srrqr (PSS_srrqr.m)
 
-%%% Determines unidentifiable parameters using parameter subset selection algorithm
-%%% with strong rank-revealing QR factorization 
+% CSS Algorithm 4.4 from 'Robust Parameter Identifiability Analysis'
+% (Pearce et al. 2022)
 
-%%% Inputs:
-    %%% eta: threshold for info matrix rank (double)
-    %%% dydq: sensitivity matrix (num data pts by num params)
-    
-%%% Outputs:
-    %%% UnId: unidentifiable parameter indices
-    %%% Id: identifiable parameter indices
-    %%% c: success criteria for rank revealing fact
+% Written by Kate Pearce
 
 function [UnId, Id, c] = PSS_srrqr(dydq, eta, k)
+% Inputs:
+    % dydq: sensitivity matrix (double, n x p with n >= p)
+    % eta (optional, double): threshold for info matrix rank; default 1e-8
+    % k (optional, integer): rank, or number identifiable params    
+% Outputs:
+    % UnId: unidentifiable parameter indices
+    % Id: identifiable parameter indices
+    % c: success criteria for rank revealing fact
 
-%%% initialize values
+% initialize values
 UnId = [];
-
 p = size(dydq, 2);
-
 Id = 1:p;
 c = [];
 
-%% do an initial QR decomposition: DON'T PIVOT FOR DIRECT ALG COMPARISONS
-[Q, R] = qr(dydq, 0); 
+% do an initial QR decomposition
+[~, R] = qr(dydq, 0); 
 [~, SingVals, ~] = svd(R, 'econ'); 
 
 if (~exist('k', 'var')) || (isempty(k) == 1)
@@ -31,14 +30,14 @@ if (~exist('k', 'var')) || (isempty(k) == 1)
         eta = 1e-8; %% default
     end
 
-    %% do the eta stuff: this will give a k
+    % if eta provided: find k
     SingVals = diag(SingVals);
     ind = find((SingVals./SingVals(1)) > eta); 
     k = length(ind); 
 
 end
 
-%% do the k stuff
+% using k = rank(S1)
 
 if k > 0
     increasefound = true;
@@ -69,13 +68,14 @@ if k > 0
         tmp = omega*gamma';
         F = AinvB.^2 + tmp.^2;
         [i, j] = find(F>1, 1);
+        %[i, j] = find(F>(sqrt(2)/1.4), 1);
         if (isempty(i))           % finished
             increasefound = false;
         else  %we can increase |det(A)|
             counter_perm = counter_perm +1;
             R(:,[i j+k]) = R(:, [j+k i]);  % permute columns i and j
             P([i j+k]) = P([j+k i]);
-            [Q, R] = qr(R, 0); % retriangularize R
+            [~, R] = qr(R, 0); % retriangularize R
         end   %if
     end   %while
 

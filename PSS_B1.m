@@ -1,60 +1,58 @@
-%%% Parameter Subset Selection Algorithm with PCA B1 (PSS_B1.m)
+% Column Subset Selection Algorithm with Alg 4.1 B1 (PSS_B1.m)
 
-%%% Determines unidentifiable parameters using parameter subset selection algorithm
-%%% with PCA B1 from Jolliffe 1972
+% Determines unidentifiable parameters using 
+% CSS Algorithm 4.1 from 'Robust Parameter Identifiability Analysis'
+% (Pearce et al. 2022)
 
-%%% Inputs:
-    %%% dydq: sensitivity matrix (double, n x p with n >= p)
-    %%% eta (optional, double): threshold for info matrix rank; default 1e-8
-    %%% k (optional, integer): rank, or number identifiable params 
-    
-%%% Outputs:
-    %%% UnId: unidentifiable parameter indices
-    %%% Id: identifiable parameter indices
-    %%% c: success criteria in rank revealing fact 
+% Written by Kate Pearce
 
 function [UnId, Id, c] = PSS_B1(dydq, eta, k)
+% Inputs:
+    % dydq: sensitivity matrix (double, n x p with n >= p)
+    % eta (optional, double): threshold for info matrix rank; default 1e-8
+    % k (optional, integer): rank, or number identifiable params   
+% Outputs:
+    % UnId: unidentifiable parameter indices
+    % Id: identifiable parameter indices
+    % c: success criteria for rank revealing fact
 
-%% initialize values
+% initialize values
 UnId = [];
-
 p = size(dydq, 2);
 Id = 1:p;
-
 c = [];
 
-%% do an initial QR decomposition: DON'T PIVOT FOR DIRECT ALG COMPARISONS
+% do an initial QR decomposition
 [Q, R] = qr(dydq, 0); 
 [~, SingVals, V] = svd(R, 'econ'); 
 
 if (~exist('k', 'var')) || (isempty(k) == 1)
     if (~exist('eta', 'var')) || (isempty(eta) == 1) || (nargin < 2)
-        eta = 1e-8; %% default
+        eta = 1e-8; % default
     end
 
-    %% do the eta stuff: this will give a k
+    % if eta provided: find k
     SingVals = diag(SingVals);
     ind = find((SingVals./SingVals(1)) > eta); 
     k = length(ind); 
 
 end
 
-%% do the k stuff
-
+% using k = rank(S1)
 num_id = k;
 num_unid = p - num_id; 
 
 if num_unid > 0
-    %% compute smallest sing vector v_p
+    % compute smallest sing vector v_p
     v_p = V(:,p);
     
     [~,max_ind] = max(abs(v_p));
     
-    %% move magnitude largest element to the bottom 
+    % move magnitude largest element to the bottom 
     P_tild = 1:p;
     P_tild([max_ind end]) = P_tild([end max_ind]);
     
-    %% compute QR of R*P_tild
+    % compute QR of R*P_tild
     B = R(:,P_tild);
     [Q_tild, R_tild] = qr(B);
     
@@ -62,7 +60,7 @@ if num_unid > 0
     R = R_tild;
     P = P_tild;
     
-    %% main loop
+    % main loop
     for iter = 1:num_unid-1
         
         l = p - iter;
