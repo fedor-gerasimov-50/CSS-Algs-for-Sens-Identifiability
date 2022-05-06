@@ -1,30 +1,31 @@
-%%% filename: SorEm.m
+% filename: SorEm.m
 
-%%% requires: SubsetSelect.m, PSS.m, PSS_B1.m, PSS_B4.m, PSS_B3.m,
-%%% PSS_srrqr.m, SuccessCheck.m
+% requires: SubsetSelect.m, PSS.m, PSS_B1.m, PSS_B4.m, PSS_B3.m,
+% PSS_srrqr.m, SuccessCheck.m
 
-%%% constructs square and rect Sorensen-Embree matrix realizations and performs column subset selection
+% Main file to construct Gu-Eisenstat matrix realizations and perform CSS
+% from 'Robust Parameter Identifiability Analysis' (Pearce et al. (2022))
 
 clear 
 close all
 
 rng default 
 
-Part = struct; %%% main structure holding relevant quantities for each realization
+Part = struct; % main structure holding relevant quantities for each realization
 
-num_reals = 10000; %%% # realizations of Sorensen-Embree matrix
+num_reals = 10000; % # realizations of Sorensen-Embree matrix
 num_algs = 4; 
 
-m = 200; %%% # rows
-n = 100; %%% # columns
-k = 20; %%% rank
+m = 200; % # rows
+n = 100; % # columns
+k = 20; % rank
 
 L = tril(-ones(k,k),-1) + eye(k);
 L(k+1:n,:) = -1;
 
 [Vk, ~] = qr(L, 0);
 Vp = null(Vk');
-V = [Vk, Vp]; %%% matrix of right singular vectors 
+V = [Vk, Vp]; % matrix of right singular vectors 
 
 for rlzn = 1:num_reals
     if mod(rlzn,25) == 0
@@ -43,8 +44,8 @@ for rlzn = 1:num_reals
     logscale2 = a2 + (b2-a2).*rand(n-k,1);
     scale2 = 10.^logscale2;
     
-    sing_vals1 = singvals(1:k).*scale1; %%% k largest
-    sing_vals2 = singvals(k+1:n).*scale2; %%% n-k smallest
+    sing_vals1 = singvals(1:k).*scale1; % k largest
+    sing_vals2 = singvals(k+1:n).*scale2; % n-k smallest
     
     sing_vals = sort([sing_vals1; sing_vals2],'descend');
     
@@ -63,13 +64,13 @@ for rlzn = 1:num_reals
         
 end
 
-%%% extract information
+% extract information
 
-crit1_abs = zeros(num_algs,num_reals); %%% criteria 2.4
-crit1_rel = zeros(num_algs,num_reals); %%% gamma_1
-crit2_abs = zeros(num_algs,num_reals); %%% criteria 2.5
-crit2_rel = zeros(num_algs,num_reals); %%% gamma_2
-crit3_cnd = zeros(num_algs,num_reals); %%% cond(S_1)/cond(S)
+crit1_abs = zeros(num_algs,num_reals); % criteria 2.4
+crit1_rel = zeros(num_algs,num_reals); % gamma_1
+crit2_abs = zeros(num_algs,num_reals); % criteria 2.5
+crit2_rel = zeros(num_algs,num_reals); % gamma_2
+crit3_cnd = zeros(num_algs,num_reals); % cond(S_1)/cond(S)
 
 for real = 1:length(Part)
     for alg = 1:num_algs
@@ -81,7 +82,7 @@ for real = 1:length(Part)
     end
 end
 
-%%% compute means for each algorithm
+% compute means for each algorithm
 crit1_abs_mean = mean(crit1_abs,2);
 crit1_rel_mean = mean(crit1_rel,2);
 crit2_abs_mean = mean(crit2_abs,2);
