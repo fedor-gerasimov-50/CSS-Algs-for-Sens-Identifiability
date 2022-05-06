@@ -1,10 +1,9 @@
 %%%  filename: SVIR.m
 %%%  computes numerical solution of ODE system
+
 %%%  Author: Kate Pearce
 
 function [t,y] = SVIR(X0, params)
-
-
 %%%  Inputs: 
 %%%       X0: initial condition for state vector X = [S; V; I; R]
 %%%       params: model parameters
@@ -22,9 +21,9 @@ tspan = 0:0.1:tfinal;
 
 options = odeset('AbsTol',1e-4); 
 
-frhs = @(t, y)(SVIRrhs(t, y, params));    %%% anonymous sub-function for ODE solver
+frhs = @(t, y)(SVIRrhs(t, y, params));    
  
-[t,y] = ode45(frhs, tspan, X0, options); %%% calls numerical solver
+[t,y] = ode45(frhs, tspan, X0, options);
 
 %%% sub-function SVIRrhs: creates right hand side of ODE system
     function yprime = SVIRrhs(t, x, params)
