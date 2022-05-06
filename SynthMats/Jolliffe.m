@@ -1,9 +1,10 @@
-%%% filename: Jolliffe.m
+% filename: Jolliffe.m
 
-%%% requires: SubsetSelect.m, PSS.m, PSS_B1.m, PSS_B4.m, PSS_B3.m,
-%%% PSS_srrqr.m, SuccessCheck.m
+% requires: SubsetSelect.m, PSS.m, PSS_B1.m, PSS_B4.m, PSS_B3.m,
+% PSS_srrqr.m, SuccessCheck.m
 
-%%% constructs square Jolliffe matrix realizations and performs column subset selection
+% Main file to construct Jolliffe matrix realizations and perform CSS
+% from 'Robust Parameter Identifiability Analysis' (Pearce et al. (2022))
 
 clear 
 close all
@@ -14,13 +15,13 @@ Part = struct;
 num_reals = 10000;
 num_algs = 4;
 
-p = 20; %%% number of blocks
+p = 20; % number of blocks
 
-rho_1 = .9; %%% lower bound for rho
-rho_2 = .99999; %%% upper bound
+rho_1 = .9; % lower bound for rho
+rho_2 = .99999; % upper bound
 
-blksize = 5; %%% size of each block; can be different sizes, just change K
-K = repmat(blksize,1,p); %%% vector of length p storing each block's size
+blksize = 5; % size of each block; can be different sizes, just change K
+K = repmat(blksize,1,p); % vector of length p storing each block's size
 
 n = blksize*p;
 m = 200; 
@@ -31,7 +32,7 @@ for real = 1:num_reals
         sprintf('Iteration %d \n',real)
     end
 
-    rho = rho_1 + (rho_2-rho_1).*rand(p,1); %%% values of rho_i
+    rho = rho_1 + (rho_2-rho_1).*rand(p,1); % values of rho_i
     
     Lambda = {};
     
@@ -46,7 +47,7 @@ for real = 1:num_reals
     
     LambdaMat = blkdiag(Lambda{:});
 
-    %V = LambdaMat;
+    % V = LambdaMat;
     [V,~] = qr(LambdaMat);
 
     X = randn(m,n);
@@ -61,8 +62,8 @@ for real = 1:num_reals
     logscale2 = a2 + (b2-a2).*rand(n-k,1);
     scale2 = 10.^logscale2;
     
-    sing_vals1 = singvals(1:k).*scale1; %%% k largest
-    sing_vals2 = singvals(k+1:n).*scale2; %%% n-k smallest
+    sing_vals1 = singvals(1:k).*scale1; % k largest
+    sing_vals2 = singvals(k+1:n).*scale2; % n-k smallest
     
     sing_vals = sort([sing_vals1; sing_vals2],'descend');
     
@@ -80,13 +81,13 @@ for real = 1:num_reals
 
 end
 
-%%% extract information
+% extract information
 
-crit1_abs = zeros(num_algs,num_reals); %%% criteria 2.4
-crit1_rel = zeros(num_algs,num_reals); %%% gamma_1
-crit2_abs = zeros(num_algs,num_reals); %%% criteria 2.5
-crit2_rel = zeros(num_algs,num_reals); %%% gamma_2
-crit3_cnd = zeros(num_algs,num_reals); %%% cond(S_1)/cond(S)
+crit1_abs = zeros(num_algs,num_reals); % criteria 2.4
+crit1_rel = zeros(num_algs,num_reals); % gamma_1
+crit2_abs = zeros(num_algs,num_reals); % criteria 2.5
+crit2_rel = zeros(num_algs,num_reals); % gamma_2
+crit3_cnd = zeros(num_algs,num_reals); % cond(S_1)/cond(S)
 
 for real = 1:length(Part)
     for alg = 1:num_algs
@@ -98,7 +99,7 @@ for real = 1:length(Part)
     end
 end
 
-%%% compute means for each algorithm
+% compute means for each algorithm
 crit1_abs_mean = mean(crit1_abs,2);
 crit1_rel_mean = mean(crit1_rel,2);
 crit2_abs_mean = mean(crit2_abs,2);
