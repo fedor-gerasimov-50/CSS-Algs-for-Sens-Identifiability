@@ -1,31 +1,32 @@
-%%% filename: SHIPS.m
+% filename: SHIPS.m
 
-%%% requires: SubsetSelect.m, PSS.m, PSS_B1.m, PSS_B4.m, PSS_B3.m,
-%%% PSS_srrqr.m, SuccessCheck.m
+% requires: SubsetSelect.m, PSS.m, PSS_B1.m, PSS_B4.m, PSS_B3.m,
+% PSS_srrqr.m, SuccessCheck.m
 
-%%% constructs square and rect SHIPS matrix realizations and performs column subset selection
+% Main file to construct SHIPS matrix realizations and perform CSS
+% from 'Robust Parameter Identifiability Analysis' (Pearce et al. (2022))
 
 clear 
 close all
 
 rng default 
 
-Part = struct; %%% main structure holding relevant quantities for each realization
+Part = struct; % main structure holding relevant quantities for each realization
 
-num_reals = 10000; %%% # realizations of SHIPS matrix
+num_reals = 10000; % # realizations of SHIPS matrix
 num_algs = 4;
 
-m = 200; %%% # rows
-n = 100; %%% # cols
-k = 20; %%% num rank
+m = 200; % # rows
+n = 100; % # cols
+k = 20; % num rank
 
-V11 = -triu(ones(k,k),1) + eye(k);  %%% used to construct matrix of right singular vectors
+V11 = -triu(ones(k,k),1) + eye(k);  % used to construct matrix of right singular vectors
 V11 = V11/(2*norm(V11));
 R = chol(eye(k) - V11'*V11, 'upper');
 
-S1 = logspace(3,2,k)'; %%% k largest singular values
+S1 = logspace(3,2,k)'; % k largest singular values
 S2 = logspace(1.9,-10,n-k)'; 
-S = diag([S1;S2]); %%% singular values
+S = diag([S1;S2]); % singular values
 
 for real = 1:num_reals
     if mod(real,50) == 0
@@ -38,7 +39,7 @@ for real = 1:num_reals
     Vk = [V11; V21];
     
     Vp = null(Vk');
-    V = [Vk, Vp]; %%% this will be the matrix of right singular vectors
+    V = [Vk, Vp]; % this will be the matrix of right singular vectors
    
     M = U*S*V';
     
@@ -53,13 +54,13 @@ for real = 1:num_reals
 
 end
 
-%%% extract information
+% extract information
 
-crit1_abs = zeros(num_algs,num_reals); %%% criteria 2.4
-crit1_rel = zeros(num_algs,num_reals); %%% gamma_1
-crit2_abs = zeros(num_algs,num_reals); %%% criteria 2.5
-crit2_rel = zeros(num_algs,num_reals); %%% gamma_2
-crit3_cnd = zeros(num_algs,num_reals); %%% cond(S_1)/cond(S)
+crit1_abs = zeros(num_algs,num_reals); % criteria 2.4
+crit1_rel = zeros(num_algs,num_reals); % gamma_1
+crit2_abs = zeros(num_algs,num_reals); % criteria 2.5
+crit2_rel = zeros(num_algs,num_reals); % gamma_2
+crit3_cnd = zeros(num_algs,num_reals); % cond(S_1)/cond(S)
 
 for real = 1:length(Part)
     for alg = 1:num_algs
@@ -71,7 +72,7 @@ for real = 1:length(Part)
     end
 end
 
-%%% compute means for each algorithm
+% compute means for each algorithm
 crit1_abs_mean = mean(crit1_abs,2);
 crit1_rel_mean = mean(crit1_rel,2);
 crit2_abs_mean = mean(crit2_abs,2);
