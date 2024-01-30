@@ -56,7 +56,21 @@ switch model
         [time_vec,func_vec] = single_neuronal_bursting(X0, parameters);
     
     case 'Protein'
-        [time_vec,func_vec] = protein_transduction(init_cond,params);
+        % set initial conditions
+        if isnan(init_cond) 
+            X0 = [1; 0; 1; 0; 0];
+        else 
+            X0 = init_cond;   
+        end
+        % set parameter values
+        if isnan(params)
+            parameters = [0.07; 0.6; 0.05; 0.3; 0.017; 0.3];
+        else
+            parameters = params;
+        end
+
+        [time_vec,func_vec] = protein_transduction(X0,parameters);
+    
     case 'Ribosome'
         [time_vec,func_vec] = ribosome_control(init_cond,params);
     case 'Lorenz'
@@ -220,3 +234,38 @@ frhs = @(t, y)(SNBrhs(t, y, params));    %%% anonymous sub-function for ODE solv
 
 end
 
+function [t, y] = protein_transduction(X0,params)
+tfinal =  200;
+tspan = 0:0.1:tfinal;
+
+frhs = @(t, y)(Protein_rhs(t, y, params));    %%% anonymous sub-function for ODE solver
+
+[t,y] = ode45(frhs, tspan, X0); %%% calls numerical solver
+
+    %%% sub-function Protein_rhs: creates right hand side of ODE system
+    function yprime = Protein_rhs(t, x, params)
+               
+        %%% state variables
+        S = x(1);
+        Sd = x(2);
+        R = x(3);
+        C = x(4);
+        Ra = x(5);
+
+        %%% model parameters
+        k1 = params(1);
+        k2 = params(2);
+        k3 = params(3);
+        k4 = params(4);
+        V = params(5);
+        km = params(6);
+
+        yprime = zeros(5, 1);
+
+        yprime(1) = -k1*S - k2*S*R + k3*C;  %%% S
+        yprime(2) = k1*S; %%% Sd
+        yprime(3) = -k2*S*R + k3*C + (V*Ra)/(km+Ra); %%% R
+        yprime(4) = k2*S*R - k3*C - k4*C; %%% C
+        yprime(5) = k4*C - (V*Ra)/(km + Ra); %%% Ra
+    end
+end

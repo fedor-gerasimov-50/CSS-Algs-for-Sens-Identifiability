@@ -4,7 +4,7 @@ clear
 close all
 rng default
 
-[t,y] = evaluate_model('SNB');
+[t,y] = evaluate_model('Protein');
 
 % N = 128;
 % figure(1)
