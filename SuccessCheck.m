@@ -37,6 +37,7 @@ function [abs_err, rel_err, cond_S, cond_S1] = SuccessCheck(S, P, k, SingVals)
        S1 = S_perm;
        cond_S = cond(S1);
        cond_S1 = cond(S1);
+       % fprintf('BIBA');
 
    else
        S1 = S_perm(:,1:k);
@@ -47,6 +48,8 @@ function [abs_err, rel_err, cond_S, cond_S1] = SuccessCheck(S, P, k, SingVals)
        Sig_k   = SingVals(k);
        
        cond_S = cond(S);
+       % disp(S);
+       % fprintf('Cond number: %.4f\n', cond_S);
        cond_S1 = cond(S1);
     
        abs_err(1) = abs(SigS1_k - Sig_k); 

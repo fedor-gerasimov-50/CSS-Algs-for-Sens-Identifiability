@@ -17,7 +17,7 @@ function [UnId, Id, c] = PSS_srrqr(dydq, eta, k)
 
 % initialize values
 UnId = [];
-p = size(dydq, 2);
+p = size(dydq, 2);      
 Id = 1:p;
 c = [];
 
